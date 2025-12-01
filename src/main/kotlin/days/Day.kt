@@ -1,7 +1,7 @@
 package days
 
 interface Day {
-    val fileName : String;
+    val fileName : String
 
     fun solve(): Pair<String, String> {
         return Pair(solvePart1(), solvePart2())
