@@ -19,14 +19,13 @@ class Day1(override val fileName: String) : Day {
         val input = readFile().lines()
         val startingSafeRange = SafeRange(0, 100, 50)
 
-        val intermediateSteps = input.scan(startingSafeRange) { acc, instruction ->
+        return input.scan(startingSafeRange) { acc, instruction ->
             when (instruction[0]) {
                 'R' -> acc.spin(instruction.substring(1).toInt(), RIGHT)
                 'L' -> acc.spin(instruction.substring(1).toInt(), LEFT)
                 else -> throw IllegalArgumentException("Invalid instruction: $instruction")
             }
         }
-        return intermediateSteps
     }
 
     private data class SafeRange(
