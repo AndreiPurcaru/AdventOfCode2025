@@ -1,8 +1,5 @@
 package days
 
-import java.awt.SystemColor.text
-
-
 class Day2(override val fileName: String) : Day {
     override fun solvePart1(): String {
         return extractRanges().fold(0L) { acc, currentRange ->
@@ -31,7 +28,7 @@ class Day2(override val fileName: String) : Day {
     private fun isRepeated(numberString: String): Boolean {
         for (i in 1..numberString.length / 2) {
             val chunks = numberString.chunked(i)
-            if (chunks.size != chunks.toSet().size) return true
+            if (chunks.toSet().size == 1) return true
         }
         return false
     }
