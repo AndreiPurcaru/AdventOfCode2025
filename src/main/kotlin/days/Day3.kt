@@ -1,15 +1,14 @@
 package days
 
-import kotlin.math.pow
 import kotlin.text.indexOf
 
 class Day3(override val fileName: String) : Day {
     override fun solvePart1(): String {
-        return extractLines().sumOf { findMaxJoltageRec(it.trim(), 2) }.toString()
+        return extractLines().sumOf { findMaxJoltageRec(it.trim(), 2).toLong() }.toString()
     }
 
     override fun solvePart2(): String {
-        return extractLines().sumOf { findMaxJoltageRec(it.trim(), 12) }.toString()
+        return extractLines().sumOf { findMaxJoltageRec(it.trim(), 12).toLong() }.toString()
     }
 
     fun extractLines(): List<String> {
@@ -27,12 +26,11 @@ class Day3(override val fileName: String) : Day {
         return leftMax.digitToInt() * 10 + rightMax
     }
 
-    private fun findMaxJoltageRec(batteryBank: String, iterations: Int): Long {
-        if (iterations == 0) return 0L
+    private fun findMaxJoltageRec(batteryBank: String, iterations: Int): String {
+        if (iterations == 0) return ""
 
         val max = batteryBank.dropLast(iterations - 1).max()
 
-        return max.digitToInt() * 10.0.pow((iterations - 1).toDouble())
-            .toLong() + findMaxJoltageRec(batteryBank.substring(batteryBank.indexOf(max) + 1), iterations - 1)
+        return max.toString() + findMaxJoltageRec(batteryBank.substring(batteryBank.indexOf(max) + 1), iterations - 1)
     }
 }
