@@ -20,29 +20,47 @@ class Day5(override val fileName: String) : Day {
             it.substringBefore("-").toLong()..it.substringAfter("-").toLong()
         }
 
-        var prevSize = ranges.size
+        var currentSize = ranges.size
         var newSize = 0
 
-        while (prevSize != newSize) {
-            ranges = ranges.sortedBy { it.first }.windowed(2).flatMap { nameMe(it) }
-            prevSize = newSize
+        while (currentSize != newSize) {
+            val sortedRanges = ranges.sortedBy { it.first }
+
+            if (currentSize % 2 == 1) {
+                val rangesTryLeft = sortedRanges.chunked(2).flatMap { attemptMerge(it) }
+                val rangesTryRight =  listOf(sortedRanges[0]) + sortedRanges.drop(1).chunked(2).flatMap { attemptMerge(it) }
+                if (rangesTryLeft.size < rangesTryRight.size) {
+                    ranges = rangesTryLeft
+                    currentSize = newSize
+                    newSize = ranges.size
+                } else {
+                    ranges = rangesTryRight
+                    currentSize = newSize
+                    newSize = ranges.size
+                }
+                continue
+            }
+
+            ranges = sortedRanges.chunked(2).flatMap { attemptMerge(it) }
+            currentSize = newSize
             newSize = ranges.size
         }
 
-        return ranges.sumOf { it.last - it.first }.toString()
+        return ranges.sumOf { it.last - it.first + 1 }.toString()
 
     }
 
-    private fun nameMe(maybeTuple: List<LongRange>): List<LongRange> {
+    private fun attemptMerge(maybeTuple: List<LongRange>): List<LongRange> {
         if (maybeTuple.size != 2) return maybeTuple
 
         val (left, right) = maybeTuple
 
         // Check if ranges overlap or are adjacent
-        if (left.last + 1 >= right.first && right.last + 1 >= left.first) {
-            // They can be merged
-            return listOf(minOf(left.first, right.first)..maxOf(left.last, right.last))
+        if (left.last + 1 >= right.first) {
+            return listOf(left.first..maxOf(left.last, right.last))
         }
+
+        // Ranges are separate, keep both
         return maybeTuple
     }
 }

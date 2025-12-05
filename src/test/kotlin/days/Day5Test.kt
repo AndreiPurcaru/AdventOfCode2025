@@ -8,7 +8,7 @@ class Day5Test {
         val day5Example = Day5("Day5Example.txt")
         val day5 = Day5("Day5.txt")
 
-        println(day5Example.solvePart2())
-//        println(day5.solvePart2())
+//        println(day5Example.solvePart2())
+        println(day5.solvePart2())
     }
 }
