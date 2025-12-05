@@ -12,16 +12,12 @@ class Day4(override val fileName: String) : Day {
 
     override fun solvePart2(): String {
         val matrix = extractMatrix()
-        var removed = 1
-        var result = 0
 
-        while (removed != 0) {
-            removed = matrix.indices.sumOf { i ->
+        return generateSequence {
+            matrix.indices.sumOf { i ->
                 matrix[i].indices.sumOf { checkAndRemove(matrix, i, it) }
             }
-            result += removed
-        }
-        return result.toString()
+        }.takeWhile { it > 0 }.sum().toString()
     }
 
     private fun extractMatrix(): Array<Array<Char>> =
