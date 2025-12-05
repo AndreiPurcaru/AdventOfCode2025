@@ -16,11 +16,33 @@ class Day5(override val fileName: String) : Day {
     override fun solvePart2(): String {
         val input = readFile()
 
-        val ranges = input.substringBefore("\n\n").lines().map {
+        var ranges = input.substringBefore("\n\n").lines().map {
             it.substringBefore("-").toLong()..it.substringAfter("-").toLong()
         }
 
-        return ranges.map { it.toSet()}.reduce { acc, set -> acc.union(set) }.size.toString()
+        var prevSize = ranges.size
+        var newSize = 0
+
+        while (prevSize != newSize) {
+            ranges = ranges.sortedBy { it.first }.windowed(2).flatMap { nameMe(it) }
+            prevSize = newSize
+            newSize = ranges.size
+        }
+
+        return ranges.sumOf { it.last - it.first }.toString()
+
     }
 
+    private fun nameMe(maybeTuple: List<LongRange>): List<LongRange> {
+        if (maybeTuple.size != 2) return maybeTuple
+
+        val (left, right) = maybeTuple
+
+        // Check if ranges overlap or are adjacent
+        if (left.last + 1 >= right.first && right.last + 1 >= left.first) {
+            // They can be merged
+            return listOf(minOf(left.first, right.first)..maxOf(left.last, right.last))
+        }
+        return maybeTuple
+    }
 }
