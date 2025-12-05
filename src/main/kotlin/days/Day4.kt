@@ -11,7 +11,17 @@ class Day4(override val fileName: String) : Day {
 
 
     override fun solvePart2(): String {
-        TODO("Not yet implemented")
+        val matrix = extractMatrix()
+        var removed = 1
+        var result = 0
+
+        while (removed != 0) {
+            removed = matrix.indices.sumOf { i ->
+                matrix[i].indices.sumOf { checkAndRemove(matrix, i, it) }
+            }
+            result += removed
+        }
+        return result.toString()
     }
 
     private fun extractMatrix(): Array<Array<Char>> =
@@ -31,6 +41,13 @@ class Day4(override val fileName: String) : Day {
             else if (matrix[i + x][j + y] == '.') 0
             else 1
         }
+    }
+
+    private fun checkAndRemove(matrix: Array<Array<Char>>, i: Int, j: Int): Int {
+        if (checkRemovable(matrix, i, j)) {
+            matrix[i][j] = '.'
+            return 1
+        } else return 0
     }
 
     private enum class Direction(val x: Int, val y: Int) {
